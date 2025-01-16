@@ -24,7 +24,7 @@ WORKDIR /var/www
 COPY . .
 
 # Exécuter Composer pour installer les dépendances Laravel
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --ignore-platform-reqs --no-dev --optimize-autoloader
 
 # Configurer les permissions pour les dossiers nécessaires
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
