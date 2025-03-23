@@ -19,9 +19,20 @@ class userController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function destroy($id){
+        User::find($id)->delete();
+    }
+    public function allEtudiants(){
+        $users = User::select("*")->orderBy('name','ASC')->where("type",0)->get();
+        return response()->json(["profs"=>$users]);  
+    }
+    public function allProfs(){
+        $users = User::select("*")->orderBy('name','ASC')->where("type",1)->get();
+        return response()->json(["profs"=>$users]);  
+    }
     public function index()
     {
-        $users = User::select("*")->orderBy('name','ASC')->get();
+        $users = User::select("*")->orderBy('id','DESC')->get();
         return response()->json($users);
     }
     public function sendCodeViaEmail(Request $request){
@@ -105,6 +116,7 @@ class userController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+  
     public function store(Request $request)
     {
 
@@ -164,8 +176,5 @@ class userController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
+ 
 }

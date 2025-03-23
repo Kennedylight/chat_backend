@@ -19,8 +19,9 @@ class CreateUsersTable extends Migration
             $table->string('subname');
             $table->string('email')->unique();
             $table->integer("type")->default(0);
-            $table->string("picture")->default("image.jpg");
+            $table->string("picture")->default("ayanokoji.jpg");
             $table->string('password');
+            $table->string("filiere");
             $table->rememberToken();
             $table->timestamps();
         });

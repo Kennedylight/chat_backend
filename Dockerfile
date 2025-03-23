@@ -1,7 +1,7 @@
 # Utiliser l'image PHP officielle avec FPM
 FROM php:8.2-fpm
 
-# Mettre à jour les paquets et installer les dépendances nécessaires pour Laravel
+# Installer les dépendances système nécessaires
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -14,31 +14,31 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Installer les extensions PHP via apt-get
-RUN apt-get update && apt-get install -y \
-    php8.2-gd \
-    php8.2-pdo \
-    php8.2-pdo_mysql \
-    php8.2-zip \
-    php8.2-mbstring \
-    php8.2-bcmath \
-    php8.2-intl \
-    php8.2-sodium
+# Configurer et installer les extensions PHP nécessaires
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
+        gd \
+        pdo_mysql \
+        zip \
+        mbstring \
+        bcmath \
+        intl \
+        sodium
 
-# Installer Composer (le gestionnaire de dépendances PHP)
+# Installer Composer (gestionnaire de dépendances PHP)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Définir le répertoire de travail
 WORKDIR /var/www
 
-# Copier les fichiers du projet dans le container
+# Copier les fichiers de votre projet dans le conteneur
 COPY . .
 
-# Installer les dépendances du projet Laravel avec Composer
+# Installer les dépendances Laravel
 RUN composer install --ignore-platform-reqs --no-dev --optimize-autoloader
 
 # Exposer le port 9000 pour PHP-FPM
 EXPOSE 9000
 
-# Démarrer PHP-FPM
+# Commande par défaut
 CMD ["php-fpm"]
